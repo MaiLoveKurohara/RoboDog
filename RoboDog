@@ -1,17 +1,31 @@
+import sys
 import time
 
-print("Hi MaiLove")
+sys.path.append('unitree_legged_sdk/lib/python/arm64')
+import robot_interface as sdk
 
-count = 0
+## comm.h
 
-while count <=10:
-    print(count)
-    count = count + 1
+HIGHLEVEL = 0xee
+LOWLEVEL  = 0xff
 
-print(count /3)
+rate = 500 # 500hz
+dt = 1.0 / rate # time between commands
 
+def main():
+    udp = sdk.UDP(HIGHLEVEL, 8080, "192.168.123.220", 8082)
 
-print("sleeping for 1 second...")
-time.sleep(1)
-print("Done")
+    cmd = sdk.HighCmd()
+    state = sdk.HighState()
+    udp.InitCmdData(cmd)
+
+    cmd.mode = 0
+    cmd.gaitType = 0
+    cmd.speedLevel = 0
+    cmd.footRaiseHeight = 0
+    cmd.bodyHeight = 0
+    cmd.euler = [0, 0, 0]
+    cmd.velocity = [0, 0]
+    cmd.yawSpeed = 0.0
+    cmd.reserve = 0
 
