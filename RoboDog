@@ -47,11 +47,26 @@ def main():
         udp.Send() 
         time.sleep(dt)
 
-    for i in range(int(2/dt)): # how many tics are in 2 seconds and loop tics for 4 seconds
-        cmd.mode = 5 #"position stand down" send command code
+    for i in range(int(4/dt)):
+        cmd.mode = 1 #active stand
+        cmd.euler = [0.0, 0.3, 0.0] #down
+        udp.SetSend(cmd)
+        udp.Send()	
+        time.sleep(dt)	
+
+    for i in range(int(4/dt)): # how many tics are in 2 seconds and loop tics for 4 seconds
+        cmd.mode = 6 #"position stand down" send command code
         udp.SetSend(cmd) #take command and get ready to send to robot
         udp.Send() #send to robot
         time.sleep(dt) #sleep before next loop
+
+    for i in range (int(4/dt)):
+        cmd.mode = 5
+        udp.SetSend(cmd)
+        udp.Send()
+        time.sleep(dt)
+
+
 
 
 main()
