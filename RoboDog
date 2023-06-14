@@ -1,3 +1,4 @@
+
 import sys
 import time
 
@@ -14,11 +15,14 @@ dt = 1.0 / rate # time between commands
 
 def main():
     udp = sdk.UDP(HIGHLEVEL, 8080, "192.168.123.220", 8082)
-
     cmd = sdk.HighCmd()
     state = sdk.HighState()
     udp.InitCmdData(cmd)
 
+  #  cmd = sdk.BmsCmd()
+ #   state = sdk.BmsState()
+
+#Reset all commands to 0 so if accidentally execute, nothing happens
     cmd.mode = 0
     cmd.gaitType = 0
     cmd.speedLevel = 0
@@ -28,4 +32,27 @@ def main():
     cmd.velocity = [0, 0]
     cmd.yawSpeed = 0.0
     cmd.reserve = 0
+
+#     for i in range(2000):
+#         udp.Recv()
+#         udp.GetRecv(state)
+#         print(state.bms.current)
+#         udp.SetSend(cmd)
+#         udp.Send()
+#         time.sleep(dt)
+
+    for i in range(int(4/dt)):
+        cmd.mode = 6 #stand
+        udp.SetSend(cmd)
+        udp.Send() 
+        time.sleep(dt)
+
+    for i in range(int(2/dt)): # how many tics are in 2 seconds and loop tics for 4 seconds
+        cmd.mode = 5 #"position stand down" send command code
+        udp.SetSend(cmd) #take command and get ready to send to robot
+        udp.Send() #send to robot
+        time.sleep(dt) #sleep before next loop
+
+
+main()
 
